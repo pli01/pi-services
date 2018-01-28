@@ -1,0 +1,38 @@
+FROM debian/jessie
+
+RUN apt-get update -qy && \
+    apt-get install -qy make iptables cron
+
+COPY prerequisities.sh /prerequisities.sh
+RUN /prerequisities.sh
+
+COPY deployment.tar.gz /opt/deployment.tar.gz
+RUN cd /opt && tar xvfz deployment.tar.gz
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+COPY iptables-bin /sbin/iptables.fake
+COPY iptables-bin /sbin/iptables-save.fake
+RUN mv /sbin/iptables /sbin/iptables.true && \
+    mv /sbin/iptables.fake /sbin/iptables && \
+    chmod 755 /sbin/iptables
+RUN mv /sbin/iptables-save /sbin/iptables-save.true && \
+    mv /sbin/iptables-save.fake /sbin/iptables-save && \
+    chmod 755 /sbin/iptables-save
+
+RUN mkdir -p /opt/test-config/group_vars
+COPY test-config/inventory /opt/test-config
+COPY test-config/infra-common /opt/test-config/group_vars
+COPY ansible.cfg  /opt/ansible.cfg
+
+RUN sed -i -e "s@http_proxy: \"http://localhost:80\"@http_proxy: \"$http_proxy\"@g ; s@https_proxy: \"http://localhost:80\"@https_proxy: \"$https_proxy\"@g" \
+    /opt/test-config/group_vars/infra-common
+
+RUN cd /opt && \
+     ansible-playbook -i test-config -e dns_resolv_conf_file="/etc/resolv.conf.docker" -c local playbooks/configure-common.yml --check --diff -vv && \
+     echo "running ansible_check_mode=false" && \
+     ansible-playbook -e dns_resolv_conf_file="/etc/resolv.conf.docker" -i test-config -c local playbooks/configure-common.yml
+
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
+

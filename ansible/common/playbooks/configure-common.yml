@@ -1,0 +1,18 @@
+---
+#TODO:  change group name
+- name: Configure COMMON
+  hosts: infra-common
+  become: yes
+  roles:
+    - resolv_conf
+    - ca-certificates
+    - common
+    - ssh
+    - ntp
+    - rsyslog
+    - supervision
+    - monitoring
+    - postfix
+    - bash-config
+    - firewall
+    - logrotate

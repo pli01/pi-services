@@ -1,0 +1,9 @@
+version: '2'
+
+# define services
+services:
+  common:
+    image: common:latest
+    entrypoint: /docker-entrypoint.sh common
+#    links:
+#      - links to other required container 

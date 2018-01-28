@@ -1,0 +1,12 @@
+resolv_conf:1.1.0-SNAPSHOT
+ca-certificates:0.2.0-SNAPSHOT
+common:1.1.0-SNAPSHOT
+ssh:1.1.0-SNAPSHOT
+ntp:1.1.0-SNAPSHOT
+rsyslog:0.1.0-SNAPSHOT
+supervision:0.1.0-SNAPSHOT
+monitoring:1.4.0-SNAPSHOT
+postfix:1.1.0-SNAPSHOT
+bash-config:0.1.0-SNAPSHOT
+firewall:0.1.0-SNAPSHOT
+logrotate:0.1.0-SNAPSHOT

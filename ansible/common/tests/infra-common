@@ -1,0 +1,49 @@
+---
+#contains variable def for test purpose
+check_mode: false
+# minimum package
+common_packages:
+ - wget
+ - ansible
+ - sudo
+ - vim
+ - git
+ - htop
+ - screen
+ - curl
+ - python-apt
+proxy: yes
+http_proxy: "http://localhost:80"
+https_proxy: "http://localhost:80"
+proxy_env:
+  http_proxy: "{{ http_proxy }}"
+  https_proxy: "{{ https_proxy }}"
+ntp_config_server:
+  - test-ntp
+#contains variable def for test purpose
+# resolv.conf
+dns_domain_search:
+ - "domain-search-1"
+ - "domain-search-2"
+
+dns_nameserver:
+ - "public_dns_1"
+ - "public_dns_2"
+#contains variable def for test purpose
+external_syslog_1: 192.168.0.1
+external_syslog_port: 514
+syslog_forwarder_addr: "local7,auth,authpriv.* @@{{ external_syslog_1}}:{{ external_syslog_port }}"
+#contains variable def for test purpose
+deploy_user: 'deploy-user'
+cloud_admin: 'group-admin'
+root_password: 'password'
+deploy_password: 'password'
+
+ca_certificates_trusted: []
+force_ntpdate_enabled: False
+
+firewall_v4_configure: true
+firewall_v4_default_rules:
+  001 default policies:
+    - -P INPUT ACCEPT
+    - -P OUTPUT ACCEPT
